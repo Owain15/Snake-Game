@@ -8,16 +8,40 @@ namespace Snake_Game.Game
 {
     internal class Controler
     {
-        public void HandleInput(ConsoleKey Input)
+        public ConsoleKey GetInput()
         {
+            ConsoleKey Move;
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            Move = keyInfo.Key;
+            return Move;
+        }
+        public ConsoleKey GetInput2()
+        {
+            ConsoleKey Move;
+            do
+            {
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                Move = keyInfo.Key;
+            } while (Console.KeyAvailable);
+
+            return Move;
+        }
+        public int[] GetMoveMade(ConsoleKey Input)
+        {
+
+            int[] MoveMade = new int[2] { 0 , 0 };
+
             switch(Input)
             {
-                case ConsoleKey.Escape: { }break;
-                case ConsoleKey.UpArrow: { }break;
-                case ConsoleKey.DownArrow: { } break;
-                case ConsoleKey.LeftArrow: { } break;
-                case ConsoleKey.RightArrow: { }break;
+               
+
+                case ConsoleKey.UpArrow:   { MoveMade[1] =-1; } break;
+                case ConsoleKey.DownArrow: { MoveMade[1] = 1; } break;
+                case ConsoleKey.LeftArrow: { MoveMade[0] =-1; } break;
+                case ConsoleKey.RightArrow:{ MoveMade[0] = 1; } break;
             }
+            return MoveMade;
         }
+
     }
 }

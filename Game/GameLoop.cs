@@ -8,11 +8,30 @@ using System.Threading.Tasks;
 namespace Snake_Game.Game
 {
     internal class GameLoop
-    { 
-        Methods Build = new Methods();
+    {
+        static int GameX;
+        static int GameY;
 
-        int GameX = 30;
-        int GameY = 3;
+        static int GameSpeed;
+        static bool WorldLooped;
+
+        Methods Method;
+        Controler Control;
+
+
+        public GameLoop(int gameX, int gameY, int gameSpeed, bool worldLooped)
+        {
+            GameX = gameX;
+            GameY = gameY;
+
+            GameSpeed = gameSpeed;
+            WorldLooped = worldLooped;
+
+            Method = new Methods(GameX,GameY);
+            Control = new Controler();
+        }
+        
+        
 
         int Score = 0;
         bool GameOver = false;
@@ -22,30 +41,56 @@ namespace Snake_Game.Game
         public void RunStartUp()
         {
 
-            Build.DrawPage(GameX, GameY);
+            Method.DrawPage();
             Console.SetCursorPosition(GameX + 3, GameY + 9);
             Console.WriteLine("Press Any Enter To Start.");
             Console.Read();
 
             Console.SetCursorPosition(GameX + 3, GameY + 9);
             Console.WriteLine("                         ");
-            Build.Intro(GameX, GameY);
+            Method.Intro();
 
 
             Console.Read();
         }
         public void RunGame()
         {
-            Snake S1 = new Snake( 1, 14, 9);
-            Snake S2 = new Snake( 2, 13, 9);
-            Snake S3 = new Snake( 3, 12, 9);
-            Snake S4 = new Snake( 4, 11, 9);
+            SetUpSnake();
+           
+           //Remove DrawPage
+            Method.DrawPage();
+            
+            ConsoleKey Input = ConsoleKey.RightArrow;
 
-            SnakeList = new List<Snake>() { S1,S2,S3,S4 };
+            do
+            {
+                
+                GameOver = Method.MoveSnake(SnakeList, Control.GetMoveMade(Input));
+                Input = CheckForInput(Input);
+                
+                Thread.Sleep(GameSpeed);
+            } while (GameOver != true);
+            
+        }
+        private void SetUpSnake()
+        {
+            Snake S1 = new Snake(13, 9);
+            Snake S2 = new Snake(12, 9);
+            Snake S3 = new Snake(11, 9);
+            Snake S4 = new Snake(10, 9);
 
-            Build.DrawSnake(GameX, GameY,SnakeList);
-
-            Console.Read();
+            SnakeList = new List<Snake>() { S1, S2, S3, S4 };
+            
+            Method.DrawSnake(SnakeList);
+        }
+        private ConsoleKey CheckForInput( ConsoleKey Input)
+        {
+               
+                bool InputMade = false;
+                InputMade = Console.KeyAvailable;
+                if (InputMade == true) { Input = Control.GetInput(); }
+                return Input;
+               
         }
 
     }

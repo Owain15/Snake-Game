@@ -8,10 +8,9 @@ namespace Snake_Game.Game
 {
     internal class Snake
     {
-        int SegmentIndex;
-
         int SegmentX;
         int SegmentY;
+     
         public int[] SegmentLocation;
 
         public ConsoleKey SegmentDirection;
@@ -19,16 +18,28 @@ namespace Snake_Game.Game
 
         public string SegmentMarker = "X";
 
-        public Snake(int Index, int X, int Y)
+        Resorses.Resorses Resource;
+
+        public Snake( int X, int Y)
         {
-            SegmentIndex = Index;
             SegmentX = X;
             SegmentY = Y;
             SegmentLocation = new int[2] {SegmentX, SegmentY};
 
+            Resource = new Resorses.Resorses();
         }
-        public void GetSegmentMarker()
+        private void GetSegmentMarker()
         {
+            
+        }
+        public bool IsMoveOutOfBounds(bool WorldLooped)
+        {
+            bool Result = true;
+
+            string Element = Resource.Border[SegmentY,SegmentX];
+            if (Element == " ") { Result = false; }
+
+            return Result;
 
         }
     }
