@@ -1,0 +1,28 @@
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.exe
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.deps.json
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.runtimeconfig.json
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.dll
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.pdb
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.AssemblyInfoInputs.cache
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.AssemblyInfo.cs
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.csproj.CoreCompileInputs.cache
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.dll
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\refint\Snake Game.dll
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.pdb
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.genruntimeconfig.cache
+C:\Users\ojdav\Blazor Projects\Snake Game\Snake Game\obj\Debug\net8.0\ref\Snake Game.dll
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.exe
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.deps.json
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.runtimeconfig.json
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.dll
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Snake Game.pdb
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.AssemblyInfoInputs.cache
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.AssemblyInfo.cs
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.csproj.CoreCompileInputs.cache
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.dll
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\refint\Snake Game.dll
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.pdb
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.genruntimeconfig.cache
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\ref\Snake Game.dll
