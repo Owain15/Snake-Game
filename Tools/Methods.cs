@@ -13,7 +13,7 @@ namespace Snake_Game.Tools
        
         int GameX;
         int GameY;
-        int Score = 0;
+        public int Score = 0;
 
         public Methods(int gameX, int gameY)
         {
@@ -100,16 +100,16 @@ namespace Snake_Game.Tools
         }
         public void DrawPage()
         {
-            DrawArray(Resource.Headder, GameX, GameY);
-            DrawArray(Resource.Border, GameX, GameY + 4);
+            DrawArray(Resource.Headder, GameX, GameY - 4);
+            DrawArray(Resource.Border, GameX, GameY );
 
-            Console.SetCursorPosition(GameX + 12, GameY + 1);
+            Console.SetCursorPosition(GameX + 12, GameY - 3);
             Console.WriteLine("Snake.");
 
-            Console.SetCursorPosition(GameX + 10, GameY + 2);
+            Console.SetCursorPosition(GameX + 10, GameY - 2);
             Console.WriteLine("Score.");
 
-            UpdateScore(Score);
+            UpdateScore();
         }
         public void DrawSnake(List<Snake> SnakeList)
         {
@@ -149,22 +149,42 @@ namespace Snake_Game.Tools
 
             
         }
-        public void UpdateScore( int CurrentScore)
+        public bool CheckSnakeHit(List<Snake> SnakeList)
         {
-            int Score = CurrentScore;
-            Console.SetCursorPosition(GameX + 16, GameY + 2);
+            bool Result = false;
+            
+            int X = SnakeList[0].SegmentLocation[0];
+            int Y = SnakeList[0].SegmentLocation[1];
+
+            for (int i = 1; i<SnakeList.Count-1; i++)
+            {
+                if( X == SnakeList[i].SegmentLocation[0] )
+                { if (Y == SnakeList[i].SegmentLocation[1]) 
+                  { Result = true; }      
+                }
+                
+            }
+            return Result;
+        }
+        public void UpdateScore()
+        {
+            
+            Console.SetCursorPosition(GameX + 16, GameY - 2);
             Console.WriteLine(Score + ".");
         }
-        public bool IsMoveInBounds(List<Snake> SnakeList, bool WorldLooped)
+        public string[,] GetGameBord()
         {
-            bool Result = true;
-            
-            string Element = Resource.Border[SnakeList[0].SegmentLocation[1]+1, SnakeList[0].SegmentLocation[0]+1];
-            if(Element == " ") { Result = false; }
-
-            return Result;
+            string[,] GameBord = Resource.Border;
+            return GameBord;
+        }
+        public void DrawFood(Food Target)
+        {
+            Console.SetCursorPosition(Target.Location[0]+GameX, Target.Location[1]+GameY);
+            Console.WriteLine(Target.FoodMarker);
 
         }
+        
+
         
     }
 }

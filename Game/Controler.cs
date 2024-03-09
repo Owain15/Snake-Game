@@ -15,17 +15,6 @@ namespace Snake_Game.Game
             Move = keyInfo.Key;
             return Move;
         }
-        public ConsoleKey GetInput2()
-        {
-            ConsoleKey Move;
-            do
-            {
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                Move = keyInfo.Key;
-            } while (Console.KeyAvailable);
-
-            return Move;
-        }
         public int[] GetMoveMade(ConsoleKey Input)
         {
 
@@ -42,6 +31,7 @@ namespace Snake_Game.Game
             }
             return MoveMade;
         }
+
 
     }
 }

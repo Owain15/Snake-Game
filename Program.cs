@@ -4,7 +4,7 @@ using Snake_Game.Game;
 Console.Title = "Snake.";
 Console.CursorVisible = false;
 
-int[] GameLocation = new int[2] { 30, 3};
+int[] GameLocation = new int[2] { 30, 7};
 int GameSpeed = 200;
 bool WorldLooped = false;
 
