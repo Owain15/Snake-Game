@@ -13,13 +13,18 @@ namespace Snake_Game.Tools
        
         int GameX;
         int GameY;
+
         public int Score = 0;
 
-        public Methods(int gameX, int gameY)
+        bool WorldLooped;
+        string[,] GameBored;
+
+        public Methods(int gameX, int gameY, bool worldLooped)
         {
             GameX = gameX;
             GameY = gameY;
-
+            WorldLooped = worldLooped;
+            GameBored = Resource.Border;
         }
         public void Intro()
         {
@@ -119,35 +124,57 @@ namespace Snake_Game.Tools
                 Console.WriteLine(Segment.SegmentMarker);
             }
         }
-        public bool MoveSnake(List<Snake> SnakeList, int[] MoveMade)
+        public bool MoveSnake(List<Snake> SnakeList, ConsoleKey Input ,int[] MoveMade,bool FoodInPlay)
         {
-            bool Result;
+            bool MoveInBounds;
           
             int X = SnakeList[0].SegmentLocation[0] + MoveMade[0];
             int Y = SnakeList[0].SegmentLocation[1] + MoveMade[1];
 
-            Snake NewSegment = new Snake(X,Y);
+            Snake NewSegment = new Snake(X,Y,Input);
+            NewSegment.SegmentDirection = SnakeList[0].NextSegmentDirection;
             
-            Result = NewSegment.IsMoveOutOfBounds(true);
+            MoveInBounds = NewSegment.IsMoveOutOfBounds();
           
-            if (Result == false)
+            if (!MoveInBounds)
             {
                 SnakeList.Insert(0, NewSegment);
+                UpdateSnakeSegmentPosition(SnakeList);
                 DrawSnakeMove(SnakeList);
-                SnakeList.RemoveAt(SnakeList.Count - 1);
+                if(FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
+                
             }
-            return Result;
+            if (MoveInBounds) 
+            { 
+             if(WorldLooped)
+                {
+                    int[] NewLooedSegmentLocation = new int[2];
+                    NewLooedSegmentLocation = GetNewLoopedLocation(X,Y);
+                    Snake NewLoopedSegment = new Snake(NewLooedSegmentLocation[0], NewLooedSegmentLocation[1],Input);
+                    NewLoopedSegment.SegmentDirection = SnakeList[0].NextSegmentDirection ;
+
+                    SnakeList.Insert(0, NewLoopedSegment);
+                    UpdateSnakeSegmentPosition(SnakeList);
+                    DrawSnakeMove(SnakeList);
+                    if (FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
+                    MoveInBounds = false;
+                }
+            }
+            return MoveInBounds;
         }
         private void DrawSnakeMove(List<Snake> SnakeList)
         {
-            Console.SetCursorPosition(SnakeList[0].SegmentLocation[0]+GameX, SnakeList[0].SegmentLocation[1]+GameY);
-            Console.WriteLine(SnakeList[0].SegmentMarker);
-
+            
             Console.SetCursorPosition
                 (SnakeList[SnakeList.Count-1].SegmentLocation[0]+GameX, SnakeList[SnakeList.Count-1].SegmentLocation[1]+GameY);
             Console.WriteLine(" ");
-
             
+            Console.SetCursorPosition(SnakeList[0].SegmentLocation[0]+GameX, SnakeList[0].SegmentLocation[1]+GameY);
+            Console.WriteLine(SnakeList[0].SegmentMarker);
+
+            Console.SetCursorPosition(SnakeList[1].SegmentLocation[0] + GameX, SnakeList[1].SegmentLocation[1] + GameY);
+            Console.WriteLine(SnakeList[1].SegmentMarker);
+
         }
         public bool CheckSnakeHit(List<Snake> SnakeList)
         {
@@ -168,9 +195,16 @@ namespace Snake_Game.Tools
         }
         public void UpdateScore()
         {
-            
             Console.SetCursorPosition(GameX + 16, GameY - 2);
             Console.WriteLine(Score + ".");
+        }
+        private void UpdateSnakeSegmentPosition(List<Snake> SnakeList)
+        {
+            for (int i = 1; i < SnakeList.Count; i++)
+            {
+                SnakeList[i].SegmentPosition++;
+            }
+
         }
         public string[,] GetGameBord()
         {
@@ -179,12 +213,24 @@ namespace Snake_Game.Tools
         }
         public void DrawFood(Food Target)
         {
-            Console.SetCursorPosition(Target.Location[0]+GameX, Target.Location[1]+GameY);
+            Console.SetCursorPosition(Target.FoodLocation[0]+GameX, Target.FoodLocation[1]+GameY);
             Console.WriteLine(Target.FoodMarker);
 
         }
-        
+        private int[] GetNewLoopedLocation(int x, int y)
+        {
+            int[] loopedLocation = new int[2] { x , y };
 
-        
+            if (x == 0) { loopedLocation[0] = GameBored.GetLength(1) - 2; }
+            if (x > GameBored.GetLength(1) - 2) { loopedLocation[0] = 1;  }
+
+            if (y == 0) { loopedLocation[1] = GameBored.GetLength(0) - 2; }
+            if (y > GameBored.GetLength(0) - 2) { loopedLocation[1] = 1; }
+           
+            return loopedLocation;
+        }
+      
+
+
     }
 }

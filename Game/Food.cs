@@ -9,7 +9,8 @@ namespace Snake_Game.Game
     internal class Food
     {
         Random Generate;
-        public int[] Location;
+        
+        public int[] FoodLocation; 
         
         string[,] GameBorder;
         List<Snake> SnakeReff;
@@ -17,6 +18,7 @@ namespace Snake_Game.Game
         public int Score;
         public string FoodMarker = "F";
         public bool FoodBeenCaught;
+        private bool TestLocationSet = false;
 
         public Food(List<Snake> SnakeList, string[,] gameBord)
         {
@@ -27,22 +29,22 @@ namespace Snake_Game.Game
 
             Generate = new Random();
 
-            Location = FindLocation(); 
- 
-
+            FoodLocation = SetFoodLocation();
+           
         }
-        public int[] FindLocation( )
+        private int[] SetFoodLocation( )
         {
             
             bool ValidLocation = true;
 
             int PreposedX;
             int PreposedY;
-
+           
             do
             {
-                PreposedX = Generate.Next(0, GameBorder.GetLength(0) - 1);
-                PreposedY = Generate.Next(0, GameBorder.GetLength(1) - 1);
+         
+                PreposedX = Generate.Next(1, GameBorder.GetLength(1) - 1);
+                PreposedY = Generate.Next(1, GameBorder.GetLength(0) - 1);
 
                 for (int i = 0; i < SnakeReff.Count - 1; i++)
                 { if(PreposedX == SnakeReff[i].SegmentLocation[0])
@@ -63,13 +65,14 @@ namespace Snake_Game.Game
 
 
         }
-        public bool HasFoodBeenCaught( Snake Head)
+
+        public bool HasFoodBeenCaught( Snake Head )
         {  
             bool Result = false;
 
-            if (Head.SegmentLocation[0] == Location[0])
+            if (Head.SegmentLocation[0] == FoodLocation[0])
             {
-                if (Head.SegmentLocation[1] == Location[1])
+                if (Head.SegmentLocation[1] == FoodLocation[1])
                 { Result = true; }
             }
             return Result;

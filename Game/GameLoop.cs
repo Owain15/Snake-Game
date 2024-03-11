@@ -29,7 +29,7 @@ namespace Snake_Game.Game
             WorldLooped = worldLooped;
             
 
-            Method = new Methods(GameX,GameY);
+            Method = new Methods(GameX,GameY,WorldLooped);
             Control = new Controler();
         }
         
@@ -41,6 +41,7 @@ namespace Snake_Game.Game
 
         List<Snake> SnakeList;
         Food TargetFood;
+
         public void RunStartUp()
         {
 
@@ -68,9 +69,10 @@ namespace Snake_Game.Game
             while (GameOver == false)
             {
                 ScoreUpdate();
-                FoodSetUp();
-                GameOver = Method.MoveSnake(SnakeList, Control.GetMoveMade(Input));
+                
                 FoodCheck();
+                GameOver = Method.MoveSnake(SnakeList, Input ,Control.GetMoveMade(Input), FoodInPlay );
+                FoodSetUp();
                 Input = CheckForInput(Input);
                 if(GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
                 Thread.Sleep(GameSpeed);
@@ -79,37 +81,39 @@ namespace Snake_Game.Game
         }
         private void SnakeSetUp()
         {
-            Snake S1 = new Snake(13, 5);
-            Snake S2 = new Snake(12, 5);
-            Snake S3 = new Snake(11, 5);
-            Snake S4 = new Snake(10, 5);
+            Snake S0 = new Snake(13, 5,ConsoleKey.RightArrow);
+            Snake S1 = new Snake(12, 5, ConsoleKey.RightArrow);
+            Snake S2 = new Snake(11, 5, ConsoleKey.RightArrow);
+            Snake S3 = new Snake(10, 5, ConsoleKey.RightArrow);
 
-            Snake S5 = new Snake(9, 5);
-            Snake S6 = new Snake(8, 5);
-            Snake S7 = new Snake(7, 5);
+            S1.SegmentPosition = 1;
+            S2.SegmentPosition = 2;
+            S3.SegmentPosition = 3;
 
-            SnakeList = new List<Snake>() { S1, S2, S3, S4,S5,S6,S7 };
+            SnakeList = new List<Snake>() { S0, S1, S2, S3 };
             
             Method.DrawSnake(SnakeList);
         }
         private void FoodSetUp()
         {
-            TargetFood = new Food(SnakeList, Method.GetGameBord());
-
             if (FoodInPlay == false)
             {
+                TargetFood = new Food(SnakeList, Method.GetGameBord());
                 Method.DrawFood(TargetFood);
                 FoodInPlay = true;
             }
         }
         private void FoodCheck() 
         {
-            if (TargetFood.Location[0] == SnakeList[0].SegmentLocation[0])
+            if (FoodInPlay)
             {
-                if (TargetFood.Location[1] == SnakeList[0].SegmentLocation[1])
+                if (TargetFood.FoodLocation[0] == SnakeList[0].SegmentLocation[0])
                 {
-                    Score = Score + TargetFood.Score;
-                    FoodInPlay = false;
+                    if (TargetFood.FoodLocation[1] == SnakeList[0].SegmentLocation[1])
+                    {
+                        Score = Score + TargetFood.Score;
+                        FoodInPlay = false;
+                    }
                 }
             }
         }
@@ -153,6 +157,7 @@ namespace Snake_Game.Game
                 Method.UpdateScore();
             }
         }
+      
 
     }
 }
