@@ -1,4 +1,5 @@
-﻿using Snake_Game.Resorses;
+﻿using Snake_Game.Game.Class;
+using Snake_Game.Resorses;
 using Snake_Game.Tools;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Snake_Game.Game
         static bool WorldLooped;
 
         Methods Method;
-        Controler Control;
+        
 
 
         public GameLoop(int gameX, int gameY, int gameSpeed, bool worldLooped)
@@ -30,7 +31,7 @@ namespace Snake_Game.Game
             
 
             Method = new Methods(GameX,GameY,WorldLooped);
-            Control = new Controler();
+            
         }
         
         
@@ -46,11 +47,11 @@ namespace Snake_Game.Game
         {
 
             Method.DrawPage();
-            Console.SetCursorPosition(GameX + 3, GameY + 9);
+            Console.SetCursorPosition(GameX + 3, GameY + 5);
             Console.WriteLine("Press Any Enter To Start.");
             Console.Read();
 
-            Console.SetCursorPosition(GameX + 3, GameY + 9);
+            Console.SetCursorPosition(GameX + 3, GameY + 5);
             Console.WriteLine("                         ");
             Method.Intro();
 
@@ -71,7 +72,7 @@ namespace Snake_Game.Game
                 ScoreUpdate();
                 
                 FoodCheck();
-                GameOver = Method.MoveSnake(SnakeList, Input ,Control.GetMoveMade(Input), FoodInPlay );
+                GameOver = Method.MoveSnake(SnakeList, Input ,Method.GetMoveMade(Input), FoodInPlay );
                 FoodSetUp();
                 Input = CheckForInput(Input);
                 if(GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
@@ -126,7 +127,7 @@ namespace Snake_Game.Game
             InputMade = Console.KeyAvailable;
             if (InputMade == true) 
             { 
-                PreposedInput = Control.GetInput(); 
+                PreposedInput = Method.GetInput(); 
                 bool InputCheck = CheckInput(Input,PreposedInput);
                 if(InputCheck == true) { Input = PreposedInput; }
             }

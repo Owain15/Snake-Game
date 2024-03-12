@@ -1,4 +1,4 @@
-﻿using Snake_Game.Game;
+﻿using Snake_Game.Game.Class;
 using Snake_Game.Tools;
 using System;
 using System.Collections.Generic;
@@ -14,24 +14,29 @@ namespace Snake_Game.Resorses
         static int GameX;
         static int GameY;
 
+        int ReadOutX;
+        int ReadOutY;
+
         static int GameSpeed;
         static bool WorldLooped;
 
         Methods Method;
-        Controler Control;
+        
 
         public TestClass(int gameX, int gameY, int gameSpeed, bool worldLooped)
         {
             GameX = gameX;
             GameY = gameY;
 
+            ReadOutX = gameX + 35;
+            ReadOutY = 0;
+
             GameSpeed = gameSpeed;
             WorldLooped = worldLooped;
 
 
             Method = new Methods(GameX, GameY, WorldLooped);
-            Control = new Controler();
-
+            
         }
 
 
@@ -51,13 +56,11 @@ namespace Snake_Game.Resorses
             Console.WriteLine("Press Enter To Spawn Food.");
 
             int TestNumber = 1;
-            int ReadOutX = GameX + 35;
-            int ReadOutY = 0;
 
             while (GameOver == false)
             {
                 Console.Read();
-                TestFoodSetUp(TestNumber, ReadOutX, ReadOutY);
+                TestFoodSetUp(TestNumber);
 
                 ReadOutY++;
                 TestNumber++;
@@ -66,7 +69,7 @@ namespace Snake_Game.Resorses
             }
 
         }
-        private void TestFoodSetUp(int TestNumber, int ReadOutX, int ReadOutY)
+        private void TestFoodSetUp(int TestNumber)
         {
             TargetFood = new Food(SnakeList, Method.GetGameBord());
 
@@ -83,11 +86,8 @@ namespace Snake_Game.Resorses
 
             //int TestSpeed = GameSpeed * 4;
 
-            int ReadOutX = GameX + 35;
-            int ReadOutY = 0;
-
             ConsoleKey Input = ConsoleKey.RightArrow;
-            TestFoodCaughtReadOutSetUp(ReadOutX, ReadOutY);
+            TestFoodCaughtReadOutSetUp();
             SnakeSetUp();
 
             while (GameOver == false)
@@ -95,25 +95,25 @@ namespace Snake_Game.Resorses
 
                 ScoreUpdate();
                 FoodSetUp();
-                GameOver = Method.MoveSnake(SnakeList, Input, Control.GetMoveMade(Input), FoodInPlay);
+                GameOver = Method.MoveSnake(SnakeList, Input, Method.GetMoveMade(Input), FoodInPlay);
                 Score = Score + FoodCheck();
                 // Input = CheckForInput(Input);
                 if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
 
-                TestFoodCaughtReadOutUpdate(ReadOutX, ReadOutY);
+                TestFoodCaughtReadOutUpdate();
                 Input = GetInput(Input);
 
                 //Thread.Sleep(TestSpeed);
             }
         }
-        private void TestFoodCaughtReadOutSetUp(int ReadOutX, int ReadOutY)
+        private void TestFoodCaughtReadOutSetUp()
         {
             Console.SetCursorPosition(ReadOutX, ReadOutY);
             Console.WriteLine("Snakes Head. ");
             Console.SetCursorPosition(ReadOutX, ReadOutY + 1);
             Console.WriteLine("Food. ");
         }
-        private void TestFoodCaughtReadOutUpdate(int ReadOutX, int ReadOutY)
+        private void TestFoodCaughtReadOutUpdate()
         {
             Console.SetCursorPosition(ReadOutX + 13, ReadOutY);
             Console.WriteLine("               ");
@@ -126,38 +126,49 @@ namespace Snake_Game.Resorses
             Console.WriteLine(TargetFood.FoodLocation[0] + "." + TargetFood.FoodLocation[1]);
         }
 
-        public void TestSnakeMakerSet()
+        public void TestSetSnakeMaker()
         {
             Method.DrawPage();
 
-            //int TestSpeed = GameSpeed * 4;
-
-            int ReadOutX = GameX + 35;
-            int ReadOutY = 0;
-
             ConsoleKey Input = ConsoleKey.RightArrow;
-            TestSnakeMarkerSetUp(ReadOutX, ReadOutY);
+            
             SnakeSetUp();
 
             while (GameOver == false)
             {
-
+                
                 ScoreUpdate();
                 FoodSetUp();
-                GameOver = Method.MoveSnake(SnakeList, Input, Control.GetMoveMade(Input), FoodInPlay);
+                GameOver = Method.MoveSnake(SnakeList, Input, Method.GetMoveMade(Input), FoodInPlay);
                 Score = Score + FoodCheck();
                 // Input = CheckForInput(Input);
                 if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
 
-                TestFoodCaughtReadOutUpdate(ReadOutX, ReadOutY);
+                TestSnakeMarkerReadOut();
                 Input = GetInput(Input);
 
-                //Thread.Sleep(TestSpeed
             }
         }
-        private void TestSnakeMarkerSetUp(int ReadOutX, int ReadOutY)
+        private void TestSnakeMarkerReadOut()
         {
+            for (int i = 0; i < SnakeList.Count-1; i++)
+            {
+                int i1 = i*4;  
 
+                Console.SetCursorPosition(ReadOutX,ReadOutY+i1);
+                Console.WriteLine("Snake Segment " + SnakeList[i].SegmentPosition + ".");
+
+                Console.SetCursorPosition(ReadOutX+17, ReadOutY + i1);
+                Console.WriteLine(SnakeList[i].SegmentMarker);
+
+                Console.SetCursorPosition(ReadOutX, ReadOutY+ 1 + i1);
+                Console.WriteLine("Snake Inputs. Current/Next.");
+
+                Console.SetCursorPosition(ReadOutX + 17, ReadOutY+ 2 + i1);
+                Console.WriteLine(SnakeList[i].SegmentDirection + "/" + SnakeList[i].NextSegmentDirection);
+            }
+
+          
         }
 
 
@@ -174,8 +185,18 @@ namespace Snake_Game.Resorses
             Snake S6 = new Snake(8, 5, ConsoleKey.RightArrow);
             Snake S7 = new Snake(7, 5, ConsoleKey.RightArrow);
 
+            S2.SegmentPosition = 1;
+            S3.SegmentPosition = 2;
+            S4.SegmentPosition = 3;
+            S5.SegmentPosition = 4;
+            S6.SegmentPosition = 5;
+            S7.SegmentPosition = 6;
+
+           
+
             SnakeList = new List<Snake>() { S1, S2, S3, S4, S5, S6, S7 };
 
+             
             Method.DrawSnake(SnakeList);
         }
         private void FoodSetUp()
@@ -198,7 +219,7 @@ namespace Snake_Game.Resorses
             InputMade = Console.KeyAvailable;
             if (InputMade == true)
             {
-                PreposedInput = Control.GetInput();
+                PreposedInput = Method.GetInput();
                 bool InputCheck = CheckInput(Input, PreposedInput);
                 if (InputCheck == true) { Input = PreposedInput; }
             }
@@ -212,7 +233,7 @@ namespace Snake_Game.Resorses
             ConsoleKey PreposedInput;
 
             
-                PreposedInput = Control.GetInput();
+                PreposedInput = Method.GetInput();
                 bool InputCheck = CheckInput(Input, PreposedInput);
                 if (InputCheck == true) { Input = PreposedInput; }
             

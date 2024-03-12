@@ -11,6 +11,7 @@ bool WorldLooped = true;
 
 GameLoop Game = new GameLoop(GameLocation[0], GameLocation[1],GameSpeed,WorldLooped);
 TestClass Test = new TestClass(GameLocation[0], GameLocation[1], GameSpeed, WorldLooped);
-//Game.RunStartUp();
+
+Game.RunStartUp();
 Game.RunGame();
-//Test.TestFoodCaught();
+//Test.TestSetSnakeMaker();

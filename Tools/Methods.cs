@@ -1,4 +1,4 @@
-﻿using Snake_Game.Game;
+﻿using Snake_Game.Game.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace Snake_Game.Tools
         public void Intro()
         {
             int IntroX = 14;
-            int IntroY = 9;
+            int IntroY = 5;
 
             Console.SetCursorPosition( IntroX + GameX, IntroY + GameY );
             Console.WriteLine("3");
@@ -121,7 +121,7 @@ namespace Snake_Game.Tools
             foreach (Snake Segment in SnakeList)
             {
                 Console.SetCursorPosition(Segment.SegmentLocation[0]+GameX, Segment.SegmentLocation[1]+GameY);
-                Console.WriteLine(Segment.SegmentMarker);
+                Console.WriteLine(Segment.GetSegmentMarker());
             }
         }
         public bool MoveSnake(List<Snake> SnakeList, ConsoleKey Input ,int[] MoveMade,bool FoodInPlay)
@@ -132,14 +132,15 @@ namespace Snake_Game.Tools
             int Y = SnakeList[0].SegmentLocation[1] + MoveMade[1];
 
             Snake NewSegment = new Snake(X,Y,Input);
-            NewSegment.SegmentDirection = SnakeList[0].NextSegmentDirection;
+            SnakeList[0].NextSegmentDirection = NewSegment.SegmentDirection;
             
             MoveInBounds = NewSegment.IsMoveOutOfBounds();
           
             if (!MoveInBounds)
             {
-                SnakeList.Insert(0, NewSegment);
                 UpdateSnakeSegmentPosition(SnakeList);
+                SnakeList.Insert(0, NewSegment);
+               
                 DrawSnakeMove(SnakeList);
                 if(FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
                 
@@ -153,8 +154,9 @@ namespace Snake_Game.Tools
                     Snake NewLoopedSegment = new Snake(NewLooedSegmentLocation[0], NewLooedSegmentLocation[1],Input);
                     NewLoopedSegment.SegmentDirection = SnakeList[0].NextSegmentDirection ;
 
-                    SnakeList.Insert(0, NewLoopedSegment);
                     UpdateSnakeSegmentPosition(SnakeList);
+                    SnakeList.Insert(0, NewLoopedSegment);
+                    
                     DrawSnakeMove(SnakeList);
                     if (FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
                     MoveInBounds = false;
@@ -164,6 +166,7 @@ namespace Snake_Game.Tools
         }
         private void DrawSnakeMove(List<Snake> SnakeList)
         {
+            UpdateSnakeMarkers(SnakeList);
             
             Console.SetCursorPosition
                 (SnakeList[SnakeList.Count-1].SegmentLocation[0]+GameX, SnakeList[SnakeList.Count-1].SegmentLocation[1]+GameY);
@@ -200,10 +203,14 @@ namespace Snake_Game.Tools
         }
         private void UpdateSnakeSegmentPosition(List<Snake> SnakeList)
         {
-            for (int i = 1; i < SnakeList.Count; i++)
-            {
-                SnakeList[i].SegmentPosition++;
-            }
+            foreach (Snake Segment in SnakeList)
+            { Segment.SegmentPosition++; }
+
+        }
+        private void UpdateSnakeMarkers(List<Snake> SnakeList)
+        {
+            foreach (Snake Segment in SnakeList)
+            { Segment.SegmentMarker = Segment.GetSegmentMarker(); }
 
         }
         public string[,] GetGameBord()
@@ -229,7 +236,30 @@ namespace Snake_Game.Tools
            
             return loopedLocation;
         }
-      
+        public ConsoleKey GetInput()
+        {
+            ConsoleKey Move;
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            Move = keyInfo.Key;
+            return Move;
+        }
+        public int[] GetMoveMade(ConsoleKey Input)
+        {
+
+            int[] MoveMade = new int[2] { 0, 0 };
+
+            switch (Input)
+            {
+
+
+                case ConsoleKey.UpArrow: { MoveMade[1] = -1; } break;
+                case ConsoleKey.DownArrow: { MoveMade[1] = 1; } break;
+                case ConsoleKey.LeftArrow: { MoveMade[0] = -1; } break;
+                case ConsoleKey.RightArrow: { MoveMade[0] = 1; } break;
+            }
+            return MoveMade;
+        }
+
 
 
     }
