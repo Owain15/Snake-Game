@@ -60,8 +60,7 @@ namespace Snake_Game.Game
         }
         public void RunGame()
         {
-           //Remove DrawPage
-            Method.DrawPage();
+            RunStartUp();
 
             ConsoleKey Input = ConsoleKey.RightArrow;
 

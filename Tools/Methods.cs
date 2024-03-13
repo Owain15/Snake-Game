@@ -207,6 +207,7 @@ namespace Snake_Game.Tools
             { Segment.SegmentPosition++; }
 
         }
+        // Is Marker Update Needed?
         private void UpdateSnakeMarkers(List<Snake> SnakeList)
         {
             foreach (Snake Segment in SnakeList)
