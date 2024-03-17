@@ -21,13 +21,13 @@ namespace Snake_Game.Game
         
 
 
-        public GameLoop(int gameX, int gameY, int gameSpeed, bool worldLooped)
+        public GameLoop(int[] GameLocation, GameSetting Settings)
         {
-            GameX = gameX;
-            GameY = gameY;
+            GameX = GameLocation[0];
+            GameY = GameLocation[1];
 
-            GameSpeed = gameSpeed;
-            WorldLooped = worldLooped;
+            GameSpeed = Settings.GameSpeed;
+            WorldLooped = Settings.WorldLooped;
             
 
             Method = new Methods(GameX,GameY,WorldLooped);
@@ -43,7 +43,7 @@ namespace Snake_Game.Game
         List<Snake> SnakeList;
         Food TargetFood;
 
-        public void RunStartUp()
+        private void RunStartUp()
         {
 
             Method.DrawPage();
@@ -60,7 +60,9 @@ namespace Snake_Game.Game
         }
         public void RunGame()
         {
-            RunStartUp();
+
+            Method.DrawPage();
+            Method.Intro();
 
             ConsoleKey Input = ConsoleKey.RightArrow;
 
