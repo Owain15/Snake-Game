@@ -193,7 +193,7 @@ namespace Snake_Game.Game
             {
                 Console.SetCursorPosition(GameX+Segment.SegmentLocation[0],GameY+Segment.SegmentLocation[1]);
                 Console.WriteLine(Segment.GetSegmentMarker());
-                Thread.Sleep(200);
+                Thread.Sleep(100);
             }
             Console.ResetColor();
            

@@ -129,7 +129,12 @@ namespace Snake_Game.Game
                         MenuIndex = 0;
                     }
                     if (Input == ConsoleKey.Escape)
-                    { Save.ResetHighScore(); }
+                    {
+                        bool Check = false;
+                        Check = CheckReset();
+                        if (Check) { Save.ResetHighScore(); } 
+
+                    }
                 }
 
             }
@@ -174,12 +179,12 @@ namespace Snake_Game.Game
 
             switch(GameSpeedIndex)
             {
-                case 1: { GameSpeed = 350; } break;
-                case 2: { GameSpeed = 300; } break;
-                case 3: { GameSpeed = 250; } break;
-                case 4: { GameSpeed = 200; } break;
-                case 5: { GameSpeed = 150; } break;
-                case 6: { GameSpeed = 100; } break;
+                case 1: { GameSpeed = 200; } break;
+                case 2: { GameSpeed = 175; } break;
+                case 3: { GameSpeed = 150; } break;
+                case 4: { GameSpeed = 125; } break;
+                case 5: { GameSpeed = 100; } break;
+                case 6: { GameSpeed = 75; } break;
                 case 7: { GameSpeed = 50;  } break;
             }
 
@@ -325,6 +330,44 @@ namespace Snake_Game.Game
             WrightString("2", 2, 5);
             WrightString("3", 2, 7);
         }
+        private bool CheckReset()
+        {
+            bool Result = false;
+
+            ClearPage();
+
+            string Title = "Reset Check";
+            
+            string Prompt1 = "Are You Sure";
+            string Prompt2 = "All Data Will Be Lost";
+
+            WrightString(Title, CenterText(Title.Length,Reff.Border.GetLength(1)), -2);
+
+            WrightString("WARNING!", CenterText(8, Reff.Border.GetLength(1)), 2);
+
+            WrightString(Prompt1,CenterText(Prompt1.Length,Reff.Border.GetLength(1)),4);
+            WrightString(Prompt2, CenterText(Prompt2.Length,Reff.Border.GetLength(1)), 5);
+            WrightString("Enter To Choose", CenterText(15, Reff.Border.GetLength(1)), 8);
+
+            ConsoleKey Input = ConsoleKey.None;
+
+            while (Input != ConsoleKey.Enter)
+            {
+                if (!Result) { Console.ForegroundColor = ConsoleColor.Green; }
+                WrightString("Keep ", 7, 6);
+                if (!Result) { Console.ResetColor(); }
+                WrightString("/", 12, 6);
+                if (Result) { Console.ForegroundColor = ConsoleColor.Red; }
+                WrightString("Delete All", 14, 6);
+                if (Result) { Console.ResetColor(); }
+
+                Input = Method.GetInput();
+
+                if(Input == ConsoleKey.LeftArrow) { Result = false; }
+                if (Input == ConsoleKey.RightArrow) { Result = true; }
+            }
+            return Result;
+        }
         private void HighScoreFillIn(HighScoreCard[] TopThreeScores)
         {
             int Row = 3;
@@ -360,30 +403,6 @@ namespace Snake_Game.Game
             int Result = HalfRow - HalfString;
 
             return Result;
-
-        }
-        public string GetName2(int Score)
-        {
-            string Name = "No Name";
-            
-            string Title = "New High Score";
-            DrawPage();
-            ClearPage();
-
-            WrightString(Title, CenterText(Title.Length,Reff.Border.GetLength(1)), -2);
-
-            WrightString("Score." + Score, 11, 2);
-
-            WrightString("Type Name, Then Press Enter.",2,4);
-            WrightString("No Longer Than 9 Characters.", 2,10);
-
-            Method.DrawArray(Reff.NameBox, GameX+10, GameY+6);
-            Console.CursorVisible = true;
-            Console.SetCursorPosition(GameX+11, GameY+7);
-
-            Name = Console.ReadLine();
-            Console.CursorVisible = false;
-            return Name;
 
         }
         public string GetName(int Score)

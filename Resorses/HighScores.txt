@@ -1,19 +1,19 @@
 [
   {
     "Name": "Kingwain",
-    "Score": 520,
-    "GameSpeedInedx": 6,
+    "Score": 10000,
+    "GameSpeedInedx": 7,
     "WorldLooped": true
   },
   {
-    "Name": "Bob",
-    "Score": 20,
-    "GameSpeedInedx": 4,
-    "WorldLooped": false
+    "Name": "Danielle",
+    "Score": 420,
+    "GameSpeedInedx": 5,
+    "WorldLooped": true
   },
   {
     "Name": "Brender",
-    "Score": 20,
+    "Score": 140,
     "GameSpeedInedx": 4,
     "WorldLooped": false
   }
