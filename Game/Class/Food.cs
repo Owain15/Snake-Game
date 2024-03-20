@@ -23,7 +23,7 @@ namespace Snake_Game.Game.Class
         public Food(List<Snake> SnakeList, string[,] gameBord)
         {
             GameBorder = gameBord;
-            SnakeReff = new List<Snake>();
+            SnakeReff =  SnakeList;
             Score = 20;
             FoodBeenCaught = false;
 

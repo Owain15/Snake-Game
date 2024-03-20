@@ -126,43 +126,50 @@ namespace Snake_Game.Tools
         }
         public bool MoveSnake(List<Snake> SnakeList, ConsoleKey Input ,int[] MoveMade,bool FoodInPlay)
         {
-            bool MoveInBounds;
+            bool InvalidMove;
           
             int X = SnakeList[0].SegmentLocation[0] + MoveMade[0];
             int Y = SnakeList[0].SegmentLocation[1] + MoveMade[1];
 
             Snake NewSegment = new Snake(X,Y,Input);
             SnakeList[0].NextSegmentDirection = NewSegment.SegmentDirection;
+           
+            InvalidMove = CheckSnakeHit(NewSegment, SnakeList);
+            if (InvalidMove) { SnakeList[0].GameOver = true; }
             
-            MoveInBounds = NewSegment.IsMoveOutOfBounds();
-          
-            if (!MoveInBounds)
+            if (!InvalidMove)
             {
-                UpdateSnakeSegmentPosition(SnakeList);
-                SnakeList.Insert(0, NewSegment);
-               
-                DrawSnakeMove(SnakeList);
-                if(FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
-                
-            }
-            if (MoveInBounds) 
-            { 
-             if(WorldLooped)
-                {
-                    int[] NewLooedSegmentLocation = new int[2];
-                    NewLooedSegmentLocation = GetNewLoopedLocation(X,Y);
-                    Snake NewLoopedSegment = new Snake(NewLooedSegmentLocation[0], NewLooedSegmentLocation[1],Input);
-                    NewLoopedSegment.SegmentDirection = SnakeList[0].NextSegmentDirection ;
+                InvalidMove = NewSegment.IsMoveOutOfBounds();
 
+                if (!InvalidMove)
+                {
                     UpdateSnakeSegmentPosition(SnakeList);
-                    SnakeList.Insert(0, NewLoopedSegment);
-                    
+                    SnakeList.Insert(0, NewSegment);
+
                     DrawSnakeMove(SnakeList);
                     if (FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
-                    MoveInBounds = false;
+
+                }
+                if (InvalidMove)
+                {
+                    if (WorldLooped)
+                    {
+                        int[] NewLooedSegmentLocation = new int[2];
+                        NewLooedSegmentLocation = GetNewLoopedLocation(X, Y);
+                        Snake NewLoopedSegment = new Snake(NewLooedSegmentLocation[0], NewLooedSegmentLocation[1], Input);
+                        NewLoopedSegment.SegmentDirection = SnakeList[0].NextSegmentDirection;
+
+                        UpdateSnakeSegmentPosition(SnakeList);
+                        SnakeList.Insert(0, NewLoopedSegment);
+
+                        DrawSnakeMove(SnakeList);
+                        if (FoodInPlay) { SnakeList.RemoveAt(SnakeList.Count - 1); }
+                        InvalidMove = false;
+                    }
+                    else { SnakeList[0].GameOver = true; }
                 }
             }
-            return MoveInBounds;
+            return InvalidMove;
         }
         private void DrawSnakeMove(List<Snake> SnakeList)
         {
@@ -179,14 +186,14 @@ namespace Snake_Game.Tools
             Console.WriteLine(SnakeList[1].SegmentMarker);
 
         }
-        public bool CheckSnakeHit(List<Snake> SnakeList)
+        public bool CheckSnakeHit(Snake PreposedMove, List<Snake> SnakeList)
         {
             bool Result = false;
             
-            int X = SnakeList[0].SegmentLocation[0];
-            int Y = SnakeList[0].SegmentLocation[1];
+            int X = PreposedMove.SegmentLocation[0];
+            int Y = PreposedMove.SegmentLocation[1];
 
-            for (int i = 1; i<SnakeList.Count-1; i++)
+            for (int i = 0; i<SnakeList.Count-1; i++)
             {
                 if( X == SnakeList[i].SegmentLocation[0] )
                 { if (Y == SnakeList[i].SegmentLocation[1]) 
@@ -260,7 +267,7 @@ namespace Snake_Game.Tools
             }
             return MoveMade;
         }
-
+      
 
 
     }

@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Kingwain",
+    "Score": 520,
+    "GameSpeedInedx": 6,
+    "WorldLooped": true
+  },
+  {
+    "Name": "Bob",
+    "Score": 20,
+    "GameSpeedInedx": 4,
+    "WorldLooped": false
+  },
+  {
+    "Name": "Brender",
+    "Score": 20,
+    "GameSpeedInedx": 4,
+    "WorldLooped": false
+  }
+]

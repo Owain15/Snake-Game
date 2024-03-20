@@ -11,6 +11,8 @@ namespace Snake_Game.Game.Class
         int SegmentX;
         int SegmentY;
 
+        public bool GameOver;
+
         public int SegmentPosition = 0;
 
         public int[] SegmentLocation;
@@ -26,6 +28,8 @@ namespace Snake_Game.Game.Class
         {
             SegmentX = X;
             SegmentY = Y;
+
+            GameOver = false;
 
             SegmentLocation = new int[2] { SegmentX, SegmentY };
 
@@ -94,7 +98,7 @@ namespace Snake_Game.Game.Class
             }
 
             if (SegmentPosition == 0) { Marker = Resource.SnakeHead; }
-
+            if(SegmentPosition == 0 && GameOver) { Marker = Resource.SnakeHeadDead; }
             return Marker;
         }
         public bool IsMoveOutOfBounds()
@@ -103,7 +107,7 @@ namespace Snake_Game.Game.Class
 
             string Element = Resource.Border[SegmentY, SegmentX];
             if (Element == " ") { Result = false; }
-
+          
             return Result;
 
         }

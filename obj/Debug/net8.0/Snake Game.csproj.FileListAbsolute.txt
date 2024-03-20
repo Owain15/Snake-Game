@@ -27,3 +27,6 @@ C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake 
 C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.genruntimeconfig.cache
 C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\ref\Snake Game.dll
 C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.sourcelink.json
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.csproj.AssemblyReference.cache
+C:\Users\ojdav\visual studio files\Snake Game\Snake Game\obj\Debug\net8.0\Snake Game.csproj.Up2Date

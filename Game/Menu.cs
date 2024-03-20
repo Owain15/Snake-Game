@@ -3,6 +3,7 @@ using Snake_Game.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,9 +17,10 @@ namespace Snake_Game.Game
         int GameY;
 
         List<MenuData> MenuList;
-        
+
         Resorses.Resorses Reff;
         Methods Method;
+        SaveData Save;
 
 
         public Menu( int[] GameLocation)
@@ -28,6 +30,7 @@ namespace Snake_Game.Game
 
             Reff = new Resorses.Resorses();
             Method = new Methods(GameX,GameY,true);
+            Save = new SaveData();
 
             MenuList = BuildMenuList();
 
@@ -36,13 +39,18 @@ namespace Snake_Game.Game
 
         private List<MenuData> BuildMenuList()
         {
-            string[] MainMenuFields = new string[] {"Start Game","Settings","Quit" };
-            MenuData MainMenu = new MenuData("MainMenu.",null,MainMenuFields,null);
+            string ReturnPrompt = "Press Enter for MainMenu";
+
+            string[] MainMenuFields = new string[] {"Start Game","Settings","High Scores","Quit" };
+            MenuData MainMenu = new MenuData("MainMenu",null,MainMenuFields);
 
             string[] SettingsMenuFields = new string[] {"Loop Map.","Game Speed." };
-            MenuData SettingsMenu = new MenuData("Settings Menu.","Press Enter for MainMenu.",SettingsMenuFields,0);
+            MenuData SettingsMenu = new MenuData("Settings Menu",ReturnPrompt,SettingsMenuFields);
 
-            MenuList = new List<MenuData>() { MainMenu, SettingsMenu} ;
+            string[]HighScoresFilds = new string[] {"Name","Score","Speed","Loop"};
+            MenuData HighScoreMenu = new MenuData("High Scores", ReturnPrompt, HighScoresFilds);
+
+            MenuList = new List<MenuData>() { MainMenu, SettingsMenu,HighScoreMenu} ;
 
             return MenuList;
         }
@@ -51,7 +59,7 @@ namespace Snake_Game.Game
         {
             int MenuIndex = 0;
             int SelectionIndex = 0;
-            int GameSpeedIndex = 4;
+            
             
             ConsoleKey Input;
 
@@ -60,11 +68,12 @@ namespace Snake_Game.Game
            
             bool MenuFinished = false;
 
+
             while (!MenuFinished)
             {
                 if (MenuIndex == 0)
                 {
-                    DrawCurrentMenuState(MenuIndex, SelectionIndex);
+                    WrightMenuMain(SelectionIndex);
 
                     Input = Method.GetInput();
 
@@ -76,7 +85,8 @@ namespace Snake_Game.Game
 
                             if (SelectionIndex == 0)
                             { MenuFinished = true; Settings.StartGame = true; }
-                            else if (SelectionIndex == 1) { if (MenuIndex == 0) { MenuIndex = SelectionIndex; } }
+                            else if (SelectionIndex == 1) { MenuIndex = SelectionIndex; } 
+                            else if (SelectionIndex == 2) { MenuIndex = SelectionIndex; }
                             else { MenuFinished = true; Settings.ApplicationRunning = false; }
                             SelectionIndex = 0;
                         }
@@ -88,7 +98,7 @@ namespace Snake_Game.Game
                 else if (MenuIndex == 1)
                 {
                     
-                    DrawCurrentMenuStateSettings(SelectionIndex,GameSpeedIndex, Settings);
+                    WrightMenuSettings(SelectionIndex,Settings.GameSpeedIndex,Settings);
 
                     Input = Method.GetInput();
                     
@@ -99,15 +109,31 @@ namespace Snake_Game.Game
                     }
 
                     SelectionIndex = HandelPrimaryInput(SelectionIndex, MenuList[1],Input);
-                   
-                    GameSpeedIndex = HandelGameSpeedInput(GameSpeedIndex,SelectionIndex,Input);
-                    Settings.GameSpeed = UpdateGameSpeed(Settings,GameSpeedIndex);
-                    
-                    Settings.WorldLooped = UpdateWorldLooped(Settings,SelectionIndex,Input);
+
+                    if (SelectionIndex == 0)
+                    {
+                        Settings.GameSpeedIndex = HandelGameSpeedInput(Settings.GameSpeedIndex, Input);
+                        Settings.GameSpeed = UpdateGameSpeed(Settings.GameSpeedIndex);
+                    }
+                    if (SelectionIndex == 1) { Settings.WorldLooped = UpdateWorldLooped(Settings.WorldLooped, Input); }
+                }
+                else if (MenuIndex == 2)
+                {
+                    WrightMenuScores(Save.GetSavedScores());
+
+                    Input = Method.GetInput();
+
+                    if (Input == ConsoleKey.Enter)
+                    {
+                        SelectionIndex = 0;
+                        MenuIndex = 0;
+                    }
+                    if (Input == ConsoleKey.Escape)
+                    { Save.ResetHighScore(); }
                 }
 
             }
-            Method.DrawArray(Reff.Border,GameX,GameY);
+           ClearPage();
             return Settings;
         }
        
@@ -125,10 +151,9 @@ namespace Snake_Game.Game
             return Result;
 
         }
-        private int HandelGameSpeedInput( int GameSpeedIndex, int SelectIndex, ConsoleKey Input)
+        private int HandelGameSpeedInput( int GameSpeedIndex, ConsoleKey Input)
         {
-            if (SelectIndex == 0)
-            {
+           
                 if(Input == ConsoleKey.LeftArrow)
                 { 
                     GameSpeedIndex = GameSpeedIndex - 1; 
@@ -140,10 +165,10 @@ namespace Snake_Game.Game
                     if (GameSpeedIndex > 7) { GameSpeedIndex = 7; }
                 }
 
-            }
+            
             return GameSpeedIndex;
         }
-        private int UpdateGameSpeed(GameSetting Settings, int GameSpeedIndex)
+        private int UpdateGameSpeed(int GameSpeedIndex)
         {
             int GameSpeed = 200;
 
@@ -161,18 +186,15 @@ namespace Snake_Game.Game
             return GameSpeed;
 
         }
-        private bool UpdateWorldLooped(GameSetting Settings, int SelectionIndex,ConsoleKey Input)
+        private bool UpdateWorldLooped(bool Worldlooped,ConsoleKey Input)
         {
-            bool Result = Settings.WorldLooped;
-
-            if (SelectionIndex == 1)
-            {
+           
                 if (Input == ConsoleKey.LeftArrow)
-                { Result = true; }
+                { Worldlooped = true; }
                 if(Input == ConsoleKey.RightArrow)
-                { Result = false; }
-            }
-            return Result;
+                { Worldlooped = false; }
+            
+            return Worldlooped;
         }
         private int IndexLoopCheck(MenuData Data, int PreposedSelectionIndex)
         {
@@ -181,52 +203,52 @@ namespace Snake_Game.Game
 
             return PreposedSelectionIndex;
         }
-        private void DrawCurrentMenuState( int MenuIndex,int SelectionIndex)
+        private void ClearPage()
         {  
-          
-                Method.DrawArray(Reff.Border, GameX, GameY);
-                WrightMenu(MenuIndex,SelectionIndex);
+          Method.DrawArray(Reff.Border, GameX, GameY);
 
-        }
-        private void DrawCurrentMenuStateSettings( int SelectionIndex, int GameSpeedIndex, GameSetting Settings)
-        {
-            Method.DrawArray(Reff.Border, GameX, GameY);
-            WrightMenuSettings( SelectionIndex, GameSpeedIndex, Settings );
+            WrightString("                   ", 6, -2);
+            Method.DrawArray(Reff.Border,GameX,GameY);
+              
         }
         private void DrawPage()
         {
+            string Title = "Snake";
             Method.DrawArray(Reff.Headder,GameX,GameY-4);
             Method.DrawArray(Reff.Border,GameX,GameY);
-            WrightString("Snake.", 12, -3);
+            WrightString(Title, CenterText(Title.Length,Reff.Headder.GetLength(1)), -3);
         }
         private void WrightString(string Input, int X, int Y) 
         {
             Console.SetCursorPosition(GameX+X,GameY+Y);
             Console.WriteLine(Input);
         }
-        private void WrightMenu(int MenuIndex, int SelectionIndex)
+        private void WrightTitle(int MenuIndex)
+        { WrightString(MenuList[MenuIndex].Title, CenterText(MenuList[MenuIndex].Title.Length,Reff.Border.GetLength(1)) , -2); }
+        private void WrightMenuMain(int SelectionIndex)
         {
-            WrightString("                   ", 6, -2);
-            WrightString(MenuList[MenuIndex].Title, CenterText(MenuList[MenuIndex].Title.Length,Reff.Headder.GetLength(1)) , - 2);
+            ClearPage();
+
+            WrightTitle(0);
 
             int LoopCount = 0;
             string[] Indicator = {">* "," *<" };
             
-            if(MenuList[MenuIndex].PagePrompt != null)
-            { WrightString(MenuList[MenuIndex].PagePrompt,3,9); }
+            //if(MenuList[0].PagePrompt != null)
+            //{ WrightString(MenuList[1].PagePrompt,3,9); }
 
-            foreach (string MenuField in MenuList[MenuIndex].Fields) 
+            foreach (string MenuField in MenuList[0].Fields) 
             {
 
                 if (LoopCount == SelectionIndex)
                 {
-                    int OffSetY = 3 + (LoopCount * 2);
+                    int OffSetY = 2 + (LoopCount * 2);
                     WrightString(Indicator[0] + MenuField + Indicator[1], 
                         CenterText(MenuField.Length + Indicator[0].Length + Indicator[1].Length, Reff.Border.GetLength(1)), OffSetY);
                 }
                 else
                 {
-                    int OffSetY = 3 + (LoopCount * 2);
+                    int OffSetY = 2 + (LoopCount * 2);
                     WrightString(MenuField, CenterText(MenuField.Length, Reff.Border.GetLength(1)),OffSetY);
 
                 }
@@ -238,10 +260,9 @@ namespace Snake_Game.Game
         }
         private void WrightMenuSettings( int SelectionIndex, int GameSpeedIndex, GameSetting Settings )
         {
-            WrightString("                   ", 6, -2);
-            WrightString(MenuList[1].Title, CenterText(MenuList[1].Title.Length, Reff.Headder.GetLength(1)), -2);
+            ClearPage();
 
-            
+            WrightTitle(1);
 
             string[] Indicator = { ">* ", " *<" };
             
@@ -280,6 +301,56 @@ namespace Snake_Game.Game
             }
             
         }
+        private void WrightMenuScores(HighScoreCard[] TopThreeScours)
+        {
+            ClearPage();
+
+            WrightTitle(2);
+
+            HighScoreSetUp();
+
+            HighScoreFillIn(TopThreeScours);
+
+            WrightString(MenuList[2].PagePrompt, 3, 9);
+            WrightString("Esc To Reset.", 9, 10);
+        }
+        private void HighScoreSetUp()
+        {
+            WrightString(MenuList[2].Fields[0], 6,  1);
+            WrightString(MenuList[2].Fields[1], 12, 1);
+            WrightString(MenuList[2].Fields[2], 19, 1);
+            WrightString(MenuList[2].Fields[3], 25, 1);
+
+            WrightString("1", 2, 3);
+            WrightString("2", 2, 5);
+            WrightString("3", 2, 7);
+        }
+        private void HighScoreFillIn(HighScoreCard[] TopThreeScores)
+        {
+            int Row = 3;
+
+           foreach (HighScoreCard Card in TopThreeScores)
+            {
+                WrightString(Card.Name, CenterText(Card.Name.Length,9)+4, Row);
+                WrightString(Card.Score.ToString(), CenterText(Card.Score.ToString().Length + 1, 5) + 14, Row);//14
+                WrightString(Card.GameSpeedInedx.ToString(), 21, Row);
+                string LoopResult = GetWorldLoopString(Card.WorldLooped);
+                WrightString(LoopResult, CenterText(LoopResult.Length + 1, 5) + 25, Row);
+
+                Row+=2;
+            }
+
+        }
+        private string GetWorldLoopString(bool WorledLooped)
+        {
+            string Result = " ";
+           
+            if (WorledLooped) { Result = "On"; }
+            if (!WorledLooped) { Result = "Off"; }
+
+            return Result;
+        }
+        
         private int CenterText(int StringLength, int RowLength)
         {
             
@@ -291,9 +362,107 @@ namespace Snake_Game.Game
             return Result;
 
         }
-    
-       
-        
+        public string GetName2(int Score)
+        {
+            string Name = "No Name";
+            
+            string Title = "New High Score";
+            DrawPage();
+            ClearPage();
+
+            WrightString(Title, CenterText(Title.Length,Reff.Border.GetLength(1)), -2);
+
+            WrightString("Score." + Score, 11, 2);
+
+            WrightString("Type Name, Then Press Enter.",2,4);
+            WrightString("No Longer Than 9 Characters.", 2,10);
+
+            Method.DrawArray(Reff.NameBox, GameX+10, GameY+6);
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(GameX+11, GameY+7);
+
+            Name = Console.ReadLine();
+            Console.CursorVisible = false;
+            return Name;
+
+        }
+        public string GetName(int Score)
+
+        {
+            string Name = "No Name";
+            string ClearBox = "         ";
+
+            string Title = "New High Score";
+            DrawPage();
+            ClearPage();
+
+            WrightString(Title, CenterText(Title.Length, Reff.Border.GetLength(1)), -2);
+
+            WrightString("Score." + Score, 11, 2);
+
+            WrightString("Type Name, Then Press Enter.", 2, 4);
+            WrightString("No Longer Than 9 Characters.", 2, 10);
+
+            Method.DrawArray(Reff.NameBox, GameX + 10, GameY + 6);
+            
+            ConsoleKey Input = ConsoleKey.UpArrow;
+            List<ConsoleKeyInfo> NameLetters = new List<ConsoleKeyInfo>();  
+
+            while(Input != ConsoleKey.Enter)
+            {
+                if(NameLetters.Count<9) 
+                {
+                    ConsoleKeyInfo Letter = Console.ReadKey(true);
+                   
+                    if(Letter.Key == ConsoleKey.Backspace)
+                    { NameLetters.RemoveAt(NameLetters.Count - 1); }
+                    else { if (Letter.Key != ConsoleKey.Enter) { NameLetters.Add(Letter); } }
+                    
+                    Input = Letter.Key;
+
+                    Name = ListToString(NameLetters);
+                    WrightString(ClearBox, 11, 7);
+                    WrightString(Name, CenterText(Name.Length,9)+11, 7);
+                }
+                else 
+                {
+                    Input = Console.ReadKey(true).Key;
+                    if (Input == ConsoleKey.Backspace) 
+                    {
+                        NameLetters.RemoveAt(NameLetters.Count - 1);
+                        Name = ListToString(NameLetters);
+                        WrightString(ClearBox, 11, 7);
+                        WrightString(Name, CenterText(Name.Length, 9) + 11, 7);
+                    }
+                   // if (InputCheck == ConsoleKey.Enter) { Input = ConsoleKey.Enter; } 
+                }
+            }
+
+            return Name;
+
+        }
+        private string ListToString(List<ConsoleKeyInfo> Letters)
+        {
+            string Result = " ";
+            
+            int Length = Letters.Count;//-1
+           
+            //if (Length == 0) { Result = Letters[0].Key.ToString().ToUpper(); }
+            //else
+            //{
+                for (int i = 0; i < Length; i++)
+                {
+                    if (i == 0) { Result = Letters[0].Key.ToString().ToUpper(); }
+                    else { Result = Result + Letters[i].Key.ToString().ToLower(); }
+                }
+           // }
+            
+             
+            return Result;
+        }
+
+
+
         internal class MenuData
         {
             public string Title;
@@ -301,12 +470,12 @@ namespace Snake_Game.Game
             public string? PagePrompt;
             public int? SettingSelectionIndex;
  
-            public MenuData(string title, string? pagePrompt ,string[] fields,int? settingSelectionIndex)
+            public MenuData(string title, string? pagePrompt ,string[] fields)
             {
                 Title = title;
                 Fields = fields;
                 PagePrompt = pagePrompt;
-                SettingSelectionIndex = settingSelectionIndex;
+              
             }
         }
    

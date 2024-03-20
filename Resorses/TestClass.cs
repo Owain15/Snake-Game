@@ -98,7 +98,7 @@ namespace Snake_Game.Resorses
                 GameOver = Method.MoveSnake(SnakeList, Input, Method.GetMoveMade(Input), FoodInPlay);
                 Score = Score + FoodCheck();
                 // Input = CheckForInput(Input);
-                if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
+                //if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
 
                 TestFoodCaughtReadOutUpdate();
                 Input = GetInput(Input);
@@ -142,7 +142,7 @@ namespace Snake_Game.Resorses
                 GameOver = Method.MoveSnake(SnakeList, Input, Method.GetMoveMade(Input), FoodInPlay);
                 Score = Score + FoodCheck();
                 // Input = CheckForInput(Input);
-                if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
+               // if (GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
 
                 TestSnakeMarkerReadOut();
                 Input = GetInput(Input);

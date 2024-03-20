@@ -37,6 +37,7 @@ namespace Snake_Game.Game
         
 
         int Score = 0;
+       
         bool FoodInPlay = false;
         bool GameOver = false;
 
@@ -58,13 +59,14 @@ namespace Snake_Game.Game
 
             Console.Read();
         }
-        public void RunGame()
+        public int RunGame()
         {
 
             Method.DrawPage();
             Method.Intro();
 
             ConsoleKey Input = ConsoleKey.RightArrow;
+            int AlternatingGameSpeed = GameSpeed;
 
             SnakeSetUp();
 
@@ -76,10 +78,18 @@ namespace Snake_Game.Game
                 GameOver = Method.MoveSnake(SnakeList, Input ,Method.GetMoveMade(Input), FoodInPlay );
                 FoodSetUp();
                 Input = CheckForInput(Input);
-                if(GameOver == false) { GameOver = Method.CheckSnakeHit(SnakeList); }
-                Thread.Sleep(GameSpeed);
-            } 
+                AlternatingGameSpeed = GetFactoredGameSpeed(AlternatingGameSpeed,Input);
+                Thread.Sleep(AlternatingGameSpeed);
+            }
+           
+            DrawGameOver();
             
+            Input = ConsoleKey.RightArrow;
+            
+            while (Input!=ConsoleKey.Enter)
+            { Input = CheckForInput(Input); }
+            
+            return Score;
         }
         private void SnakeSetUp()
         {
@@ -158,6 +168,43 @@ namespace Snake_Game.Game
                 Method.Score = Score;
                 Method.UpdateScore();
             }
+        }
+        private int GetFactoredGameSpeed(int AlternateGameSpeed , ConsoleKey Input)
+        {
+            int CurrentGameSpeed = AlternateGameSpeed;
+
+            switch(Input)
+            {
+                case ConsoleKey.UpArrow: { CurrentGameSpeed = GameSpeed +(GameSpeed/2); }break;
+                case ConsoleKey.DownArrow: { CurrentGameSpeed = GameSpeed + (GameSpeed/2); } break;
+                case ConsoleKey.LeftArrow: { CurrentGameSpeed = GameSpeed; } break;
+                case ConsoleKey.RightArrow: { CurrentGameSpeed = GameSpeed; } break;
+            }
+
+               return CurrentGameSpeed;
+        }
+        private void DrawGameOver()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            
+            if (FoodInPlay) { Method.DrawFood(TargetFood); }
+            
+            foreach (Snake Segment in SnakeList)
+            {
+                Console.SetCursorPosition(GameX+Segment.SegmentLocation[0],GameY+Segment.SegmentLocation[1]);
+                Console.WriteLine(Segment.GetSegmentMarker());
+                Thread.Sleep(200);
+            }
+            Console.ResetColor();
+           
+            Console.SetCursorPosition(GameX+11,GameY+4);
+            Console.WriteLine("GAME OVER!");
+
+            Console.SetCursorPosition(GameX + 12, GameY + 6);
+            Console.WriteLine("Score "+Score);
+
+            Console.SetCursorPosition(GameX + 1, GameY + 10);
+            Console.WriteLine("Press Enter To Return To Menu");
         }
       
 
